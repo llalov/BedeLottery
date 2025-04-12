@@ -1,53 +1,56 @@
 ﻿namespace BedeLottery.Client;
 
+using BedeLottery.Client.Services;
 using BedeLottery.Core.Services;
 public class LotteryConsoleApp
 {
 	private readonly IGameService gameService;
+    private readonly IConsoleService console;
 
-	public LotteryConsoleApp(IGameService gameService)
+    public LotteryConsoleApp(IGameService gameService, IConsoleService console)
 	{
 		this.gameService = gameService ?? throw new ArgumentNullException(nameof(gameService));
-	}
+        this.console = console ?? throw new ArgumentNullException(nameof(console));
+    }
 
 	public void Run()
 	{
 		var player = gameService.CreateConsolePlayer();
 
-		Console.WriteLine($"Welcome to the Bede Lottery, Player {player.Id}!");
-		Console.WriteLine();
-		Console.WriteLine($"* Your digital balance: ${player.Balance:F2}");
-		Console.WriteLine($"* Ticket Price: ${gameService.GetTicketPrice():F2} each");
-		Console.WriteLine();
+		console.WriteLine($"Welcome to the Bede Lottery, Player {player.Id}!");
+		console.WriteLine();
+		console.WriteLine($"* Your digital balance: ${player.Balance:F2}");
+		console.WriteLine($"* Ticket Price: ${gameService.GetTicketPrice():F2} each");
+		console.WriteLine();
 		while (true)
 		{
-			Console.WriteLine($"How many tickets do you want to buy, Player {player.Id}?");
-			var input = Console.ReadLine();
+			console.WriteLine($"How many tickets do you want to buy, Player {player.Id}?");
+			var input = console.ReadLine();
 
 			if (int.TryParse(input, out var ticketsCount) && ticketsCount > 0)
 			{
 				gameService.PurchaseTickets(player.Id, ticketsCount);
 				break;
 			}
-			Console.WriteLine("Invalid input. Please enter a valid positive number.");
+			console.WriteLine("Invalid input. Please enter a valid positive number.");
 		}
-		Console.WriteLine();
+		console.WriteLine();
 		var cpuPlayers = gameService.GenerateCpuPlayers();
-		Console.WriteLine($"{cpuPlayers.Count()} other CPU players also have purchased tickets.");
-		Console.WriteLine();
-		Console.WriteLine("Ticket Draw Results:");
-		Console.WriteLine();
+		console.WriteLine($"{cpuPlayers.Count()} other CPU players also have purchased tickets.");
+		console.WriteLine();
+		console.WriteLine("Ticket Draw Results:");
+		console.WriteLine();
 		var drawResults = gameService.DrawTickets();
-		Console.WriteLine($"* Grand Prize: Player {drawResults.GrandPrizeWinner.Id} wins ${drawResults.GrandPrizeAmount:F2}!");
+		console.WriteLine($"* Grand Prize: Player {drawResults.GrandPrizeWinner.Id} wins ${drawResults.GrandPrizeAmount:F2}!");
 		var secondTierIds = string.Join(", ", drawResults.SecondTierWinners.Select(p => p.Id));
-		Console.WriteLine($"* Second Tier: Players {secondTierIds} win ${drawResults.SecondTierPrizeAmount:F2} each!");
+		console.WriteLine($"* Second Tier: Players {secondTierIds} win ${drawResults.SecondTierPrizeAmount:F2} each!");
 		var thirdTierIds = string.Join(", ", drawResults.ThirdTierWinners.Select(p => p.Id));
-		Console.WriteLine($"* Third Tier: Players {thirdTierIds} win ${drawResults.ThirdTierPrizeAmount:F2} each!");
-		Console.WriteLine();
-		Console.WriteLine("Congratulations to the winners!");
-		Console.WriteLine();
+		console.WriteLine($"* Third Tier: Players {thirdTierIds} win ${drawResults.ThirdTierPrizeAmount:F2} each!");
+		console.WriteLine();
+		console.WriteLine("Congratulations to the winners!");
+		console.WriteLine();
 		var houseRevenue = gameService.GetHouseRevenue();
-		Console.WriteLine($"House Revenue: ${houseRevenue:F2}");
-		Console.ReadLine();
+		console.WriteLine($"House Revenue: ${houseRevenue:F2}");
+		console.ReadLine();
 	}
 }

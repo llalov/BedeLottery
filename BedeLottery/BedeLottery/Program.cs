@@ -1,4 +1,5 @@
 using BedeLottery.Client;
+using BedeLottery.Client.Services;
 using BedeLottery.Common.Configration;
 using BedeLottery.Core.Repositories;
 using BedeLottery.Core.Services;
@@ -15,6 +16,7 @@ var host = Host.CreateDefaultBuilder(args)
 		services.Configure<Configuration>(config.GetSection("GameSettings"));
 
 		// Register core services
+		services.AddSingleton<IConsoleService, ConsoleService>();
 		services.AddSingleton<IPlayerRepository, PlayerRepository>();
 		services.AddSingleton<IPlayerService, PlayerService>();
 		services.AddSingleton<IGameService, GameService>();

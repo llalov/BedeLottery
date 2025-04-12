@@ -1,4 +1,5 @@
 ﻿using BedeLottery.Client;
+using BedeLottery.Client.Services;
 using BedeLottery.Common.Configration;
 using BedeLottery.Core.Repositories;
 using BedeLottery.Core.Services;
@@ -34,6 +35,7 @@ namespace BedeLottery.Tests.HostTests
 				.ConfigureServices((context, services) =>
 				{
 					services.Configure<Configuration>(context.Configuration.GetSection("GameSettings"));
+					services.AddSingleton<IConsoleService, ConsoleService>();
 					services.AddSingleton<IPlayerRepository, PlayerRepository>();
 					services.AddSingleton<IPlayerService, PlayerService>();
 					services.AddSingleton<IGameService, GameService>();
