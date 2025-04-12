@@ -1,2 +1,2 @@
 # BedeLottery
-Simple console based lottery game
+Simple but extensible and configurable Lottery Game.
